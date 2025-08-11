@@ -21,6 +21,7 @@ typedef enum
     CM4_BOARD = 2,
     H616_BOARD = 3,
     CM4_V5_BOARD = 4,
+    Rk3566_BOARD = 5,
 }blikvm_board_type_e;
 
 /**

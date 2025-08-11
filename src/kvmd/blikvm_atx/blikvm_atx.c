@@ -74,6 +74,13 @@ blikvm_int8_t blikvm_atx_init()
             PIN_LED_PWR = 37; //GPIO 26
             PIN_LED_HDD = 33; //GPIO 13
         }
+        else if(type == Rk3566_BOARD)
+        {
+            PIN_POWER = 16; //BCM23
+            PIN_RESET = 13; //BCM27
+            PIN_LED_PWR = 18; //BCM24
+            PIN_LED_HDD = 15; //BCM22
+        }
         else
         {
             BLILOG_E(TAG,"Unsupported board\n");

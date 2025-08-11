@@ -151,6 +151,7 @@ static void *softPwmThread (void *arg)
   {
     mark  = marks [pin] ;
     space = range [pin] - mark ;
+    // printf("pin: %d, mark:%d, space: %d\n", pin, mark, space);
 
     if (mark != 0)
       AIOWriteGPIO(pin, 1);

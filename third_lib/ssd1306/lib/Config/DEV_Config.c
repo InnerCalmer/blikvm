@@ -69,7 +69,7 @@ UBYTE DEV_ModuleInit(void)
     printf("USE_IIC\r\n");		
     OLED_DC_0;
     OLED_CS_0;
-    DEV_HARDWARE_I2C_begin("/dev/i2c-1");
+    DEV_HARDWARE_I2C_begin("/dev/i2c-2");
     DEV_HARDWARE_I2C_setSlaveAddress(0x3c);
 
     return 0;

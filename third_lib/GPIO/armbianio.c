@@ -54,7 +54,7 @@ static AIOIRCALLBACK cbIRList[MAX_PINS];
 // and can be used for GPIOs as well.
 //
 
-static struct gpiod_chip *chip = NULL; // GPIO 芯片
+static struct gpiod_chip *chip = NULL;	   // GPIO 芯片
 static struct gpiod_line *lines[MAX_PINS]; // GPIO 引脚
 
 // Le potato
@@ -77,6 +77,14 @@ static int iRPIPins[] = {-1, -1, -1, 2, -1, 3, -1, 4, 14, -1,
 						 -1, 9, 25, 11, 8, -1, 7, 0, 1, 5,
 						 -1, 6, 12, 13, -1, 19, 16, 26, 20, -1,
 						 21};
+
+// Orange Pi
+static int iOPICM4Pins[] = {-1, -1, -1, 140, -1, 141, -1, 147, 25, -1,
+							24, 118, 119, 128, -1, 130, 131, -1, 129, 138,
+							-1, 136, 132, 139, 134, -1, 135, 32, 33, 133,
+							-1, 124, 144, 127, -1, 120, 125, 123, 122, -1,
+							121};
+
 static int iWiringPiPins[] = {-1, -1, -1, 8, -1, 9, -1, 7,
 							  15, -1, 16, 0, 1, 2, -1, 3,
 							  4, -1, 5, 12, -1, 13, 6, 14,
@@ -158,10 +166,10 @@ static int iMangoPiPins[] = {-1, -1, -1, 264, -1, 263, -1, 266, 112, -1,
 							 -1, 268, 261, 271, -1, 258, 234, 272, 260, -1,
 							 259, 233};
 
-static int *iPinLists[] = {ipotatoPins, iBPIZPins, iRPIPins, iOPIZPPins, iOPIZP2ins, iOPIZPins, iOPI1Pins, iOPI1Pins,
+static int *iPinLists[] = {ipotatoPins, iBPIZPins, iRPIPins, iOPICM4Pins, iOPIZPPins, iOPIZP2ins, iOPIZPins, iOPI1Pins, iOPI1Pins,
 						   iNPDPins, iNP2Pins, iNPK2Pins, iNPNPins, iNPNPins, iNPNPins, iNPM4Pins, iNPM4Pins,
 						   iTinkerPins, iRadxaZeroPins, iMangoPiPins};
-static const char *szBoardNames[] = {"Le potato\n", "Banana Pi M2 Zero\n", "Raspberry Pi\n", "Orange Pi Zero Plus\n",
+static const char *szBoardNames[] = {"Le potato\n", "Banana Pi M2 Zero\n", "Raspberry Pi\n", "OPI CM4\n", "Orange Pi Zero Plus\n",
 									 "Orange Pi Zero Plus 2\n", "Orange Pi Zero\n", "Orange Pi Lite\n", "Orange Pi One\n",
 									 "NanoPi Duo\n", "NanoPi 2\n", "Nanopi K2\n", "NanoPi Neo\n", "NanoPi Air\n",
 									 "NanoPi Neo 2\n", "NanoPi M4\n", "NanoPi M4V2\n", "Tinkerboard\n", "Radxa Zero\n",
@@ -175,17 +183,20 @@ static int iIR_GPIO[] = {7, 0, 0, 363, 363, 363, 363, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 // Close any open handles to GPIO pins and
 // 'unexport' them
 //
-void AIOShutdown(void) {
-    int i;
+void AIOShutdown(void)
+{
+	int i;
 
-    for (i = 0; i < MAX_PINS; i++) {
-        AIORemoveGPIO(i); // 释放所有引脚
-    }
+	for (i = 0; i < MAX_PINS; i++)
+	{
+		AIORemoveGPIO(i); // 释放所有引脚
+	}
 
-    if (chip) {
-        gpiod_chip_close(chip); // 关闭 GPIO 芯片
-        chip = NULL;
-    }
+	if (chip)
+	{
+		gpiod_chip_close(chip); // 关闭 GPIO 芯片
+		chip = NULL;
+	}
 }
 
 //
@@ -237,10 +248,10 @@ int AIOInitBoard(const char *pBoardName)
 		}
 		i++;
 	}
-// Pi image not have /run/machine.id
-#ifdef RPI
-	iBoardType = 2;
-#endif
+	// Pi image not have /run/machine.id
+	// #ifdef RPI
+	// 	iBoardType = 2;
+	// #endif
 	if (iBoardType == -1) // not found
 	{
 		fprintf(stderr, "Unrecognized board type, aborting...\n");
@@ -403,34 +414,38 @@ int AIOWriteI2C(int iHandle, unsigned char ucRegister, unsigned char *buf, int i
 //
 // Read from a GPIO pin
 //
-int AIOReadGPIO(int iPin) {
-    int value;
+int AIOReadGPIO(int iPin)
+{
+	int value;
 
-    if (iBoardType == -1 || !lines[iPin]) // 未初始化或引脚未设置
-        return -1;
+	if (iBoardType == -1 || !lines[iPin]) // 未初始化或引脚未设置
+		return -1;
 
-    value = gpiod_line_get_value(lines[iPin]);
-    if (value < 0) {
-        fprintf(stderr, "Error reading value from GPIO line %d\n", iPin);
-        return -1;
-    }
+	value = gpiod_line_get_value(lines[iPin]);
+	if (value < 0)
+	{
+		fprintf(stderr, "Error reading value from GPIO line %d\n", iPin);
+		return -1;
+	}
 
-    return value;
+	return value;
 }
 
 //
 // Write a 0 or 1 to a GPIO output line
 //
-int AIOWriteGPIO(int iPin, int iValue) {
-    if (iBoardType == -1 || !lines[iPin]) // 未初始化或引脚未设置
-        return 0;
+int AIOWriteGPIO(int iPin, int iValue)
+{
+	if (iBoardType == -1 || !lines[iPin]) // 未初始化或引脚未设置
+		return 0;
 
-    if (gpiod_line_set_value(lines[iPin], iValue) < 0) {
-        fprintf(stderr, "Error writing value %d to GPIO line %d\n", iValue, iPin);
-        return 0;
-    }
+	if (gpiod_line_set_value(lines[iPin], iValue) < 0)
+	{
+		fprintf(stderr, "Error writing value %d to GPIO line %d\n", iValue, iPin);
+		return 0;
+	}
 
-    return 1;
+	return 1;
 }
 
 //
@@ -671,54 +686,111 @@ int AIORemoveGPIOIRCallback(int iPin)
 	return 1;
 } /* AIORemoveGPIOIRCallback() */
 
+int get_chip_and_offset(int gpio, char *chip_name, size_t len, int *offset)
+{
+	if (gpio < 0)
+		return -1;
+	if (gpio < 32)
+	{
+		snprintf(chip_name, len, "/dev/gpiochip0");
+		*offset = gpio;
+	}
+	else if (gpio < 64)
+	{
+		snprintf(chip_name, len, "/dev/gpiochip1");
+		*offset = gpio - 32;
+	}
+	else if (gpio < 96)
+	{
+		snprintf(chip_name, len, "/dev/gpiochip2");
+		*offset = gpio - 64;
+	}
+	else if (gpio < 128)
+	{
+		snprintf(chip_name, len, "/dev/gpiochip3");
+		*offset = gpio - 96;
+	}
+	else if (gpio < 160)
+	{
+		snprintf(chip_name, len, "/dev/gpiochip4");
+		*offset = gpio - 128;
+	}
+	else
+	{
+		return -1; // 不支持更大编号
+	}
+	return 0;
+}
+
 //
 // Initialize a GPIO line for input or output
 // This will export it to the sysfs driver and
 // it will appear in /sys/class/gpio
 //
-int AIOAddGPIO(int iPin, int iDirection) {
-    int *pPins;
-    int iGPIO;
+int AIOAddGPIO(int iPin, int iDirection)
+{
+	int *pPins;
+	int iGPIO;
+	char chip_name[64];
+	int offset;
 
-    if (iBoardType == -1) // 未初始化
-        return 0;
+	printf("pin: %d\n", iPin);
 
-    pPins = iPinLists[iBoardType];
-    if (iPin != IR_PIN && pPins[iPin] == -1) // 无效引脚
-        return 0;
+	if (iBoardType == -1) // 未初始化
+		return 0;
 
-    if (chip == NULL) {
-        chip = gpiod_chip_open("/dev/gpiochip0"); // 打开 GPIO 芯片
-        if (!chip) {
-            fprintf(stderr, "Error opening GPIO chip\n");
-            return 0;
-        }
-    }
+	pPins = iPinLists[iBoardType];
+	if (iPin != IR_PIN && pPins[iPin] == -1) // 无效引脚
+		return 0;
 
-    if (iPin == IR_PIN)
-        iGPIO = iIR_GPIO[iBoardType];
-    else
-        iGPIO = pPins[iPin];
+	if (iPin == IR_PIN)
+		iGPIO = iIR_GPIO[iBoardType];
+	else
+		iGPIO = pPins[iPin];
 
-    lines[iPin] = gpiod_chip_get_line(chip, iGPIO); // 获取 GPIO 引脚
-    if (!lines[iPin]) {
-        fprintf(stderr, "Error getting GPIO line %d\n", iGPIO);
-        return 0;
-    }
+	if (get_chip_and_offset(iGPIO, chip_name, sizeof(chip_name), &offset) < 0)
+	{
+		fprintf(stderr, "Invalid GPIO number %d\n", iGPIO);
+		return 0;
+	}
 
-    if (iDirection == GPIO_OUT) {
-        if (gpiod_line_request_output(lines[iPin], "armbianio", 0) < 0) {
-            fprintf(stderr, "Error setting GPIO line %d as output\n", iGPIO);
-            return 0;
-        }
-    } else {
-        if (gpiod_line_request_input(lines[iPin], "armbianio") < 0) {
-            fprintf(stderr, "Error setting GPIO line %d as input\n", iGPIO);
-            return 0;
-        }
-    }
+	printf("chip_name: %s, offset: %d\n", chip_name, offset);
 
-    return 1;
+	if (chip == NULL)
+	{
+		chip = gpiod_chip_open(chip_name); // 打开 GPIO 芯片
+		if (!chip)
+		{
+			fprintf(stderr, "Error opening GPIO chip\n");
+			return 0;
+		}
+	}
+
+	lines[iPin] = gpiod_chip_get_line(chip, offset); // 获取 GPIO 引脚
+	if (!lines[iPin])
+	{
+		fprintf(stderr, "Error getting GPIO line %d\n", iGPIO);
+		return 0;
+	}
+
+	if (iDirection == GPIO_OUT)
+	{
+		if (gpiod_line_request_output(lines[iPin], "armbianio", 0) < 0)
+		{
+			fprintf(stderr, "Error setting GPIO line %d as output\n", iGPIO);
+			return 0;
+		}
+	}
+	else
+	{
+		if (gpiod_line_request_input(lines[iPin], "armbianio") < 0)
+		{
+			fprintf(stderr, "Error setting GPIO line %d as input\n", iGPIO);
+			return 0;
+		}
+	}
+
+	return 1;
 }
 
 //
@@ -726,11 +798,13 @@ int AIOAddGPIO(int iPin, int iDirection) {
 // This will 'unexport' it from the sysfs driver
 // and remove it from the /sys/class/gpio directory
 //
-void AIORemoveGPIO(int iPin) {
-    if (lines[iPin]) {
-        gpiod_line_release(lines[iPin]); // 释放 GPIO 引脚
-        lines[iPin] = NULL;
-    }
+void AIORemoveGPIO(int iPin)
+{
+	if (lines[iPin])
+	{
+		gpiod_line_release(lines[iPin]); // 释放 GPIO 引脚
+		lines[iPin] = NULL;
+	}
 }
 
 //

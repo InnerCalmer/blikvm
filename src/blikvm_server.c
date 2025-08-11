@@ -105,21 +105,28 @@ blikvm_int8_t blikvm_start(blikvm_config_t *config)
         {
             BLILOG_D(TAG,"gpio start ok\n");
         }
+
         if(blikvm_fan_start() < 0 )
         {
             BLILOG_E(TAG,"fan start error\n");
-            break;
         }
+        else
+        {
+            BLILOG_D(TAG,"fan start ok\n");
+        }
+        
         if (blikvm_atx_start() < 0)
         {
             BLILOG_E(TAG,"atx start error\n");
-            break;
+        }
+        else
+        {
+            BLILOG_D(TAG,"atx start ok\n");
         }
 
         if(blikvm_oled_start() < 0)
         {
             BLILOG_E(TAG,"oled start error\n");
-            break;
         }
         else
         {

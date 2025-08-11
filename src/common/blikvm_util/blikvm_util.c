@@ -21,6 +21,7 @@
 static blikvm_int8_t *pi4b_board = "Raspberry Pi 4 Model B";
 static blikvm_int8_t *cm4b_board = "Raspberry Pi Compute Module 4";
 static blikvm_int8_t *h616_board = "MangoPi Mcore";
+static blikvm_int8_t *rk3566_board = "Rockchip RK3566 Orange Pi CM4 Board";
 
 blikvm_int32_t execmd(blikvm_int8_t* cmd, blikvm_int8_t* result) 
 {
@@ -126,6 +127,10 @@ blikvm_board_type_e blikvm_get_board_type()
         else if( strstr(result1,h616_board) != NULL)
         {
             type = H616_BOARD;
+        }
+        else if(strstr(result1,rk3566_board) != NULL)
+        {
+            type = Rk3566_BOARD;
         }
 
         //Raspberry Pi 4

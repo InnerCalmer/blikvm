@@ -55,6 +55,8 @@ blikvm_int8_t blikvm_oled_init(blikvm_oled_config_t *config)
             break;
         case CM4_V5_BOARD:
             g_oled_type = OLED_ST7789_240_240;
+        case Rk3566_BOARD:
+            g_oled_type = OLED_SSD1306_128_64;
             break;
         default:
             break;
@@ -191,6 +193,7 @@ blikvm_void_t blikvm_oled_mode_2()
         {
             sleep(oled_config->cycleInterval);
             last_time = blikvm_get_utc_ms() / 1000;
+            
         }
         switch (g_oled_type)
         {
