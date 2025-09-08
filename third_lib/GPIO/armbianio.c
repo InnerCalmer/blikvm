@@ -248,10 +248,10 @@ int AIOInitBoard(const char *pBoardName)
 		}
 		i++;
 	}
-	// Pi image not have /run/machine.id
-	// #ifdef RPI
-	// 	iBoardType = 2;
-	// #endif
+// Pi image not have /run/machine.id
+#ifdef RPI
+	iBoardType = 2;
+#endif
 	if (iBoardType == -1) // not found
 	{
 		fprintf(stderr, "Unrecognized board type, aborting...\n");

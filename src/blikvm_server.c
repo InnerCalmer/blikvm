@@ -105,7 +105,6 @@ blikvm_int8_t blikvm_start(blikvm_config_t *config)
         {
             BLILOG_D(TAG,"gpio start ok\n");
         }
-
         if(blikvm_fan_start() < 0 )
         {
             BLILOG_E(TAG,"fan start error\n");
