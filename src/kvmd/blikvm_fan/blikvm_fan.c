@@ -12,39 +12,22 @@
 #include <sys/stat.h>
 #include <fcntl.h>   
 #include "softPwm.h"    
-
 #include "blikvm_fan.h"
 #include "common/blikvm_log/blikvm_log.h"
 #include "common/blikvm_socket/blikvm_socket.h"
-<<<<<<< HEAD
 #include "common/blikvm_util/blikvm_util.h"
-=======
->>>>>>> d5c38f04c7ac7b5d743863f53463e52431d0aef3
 #include "config/blikvm_config.h"
-
 #define TAG "FAN"
 #define TEMP_PATH "/sys/class/thermal/thermal_zone0/temp"
 #define MAX_SIZE 32
 
-<<<<<<< HEAD
 // #ifdef  RPI
 // #define FAN_PIN 32  // BCM12
 // #endif
-=======
-#ifdef  RPI
-#define FAN_PIN 32  // BCM12
-#endif
->>>>>>> d5c38f04c7ac7b5d743863f53463e52431d0aef3
-
 static int  FAN_PIN = 0;
-
-<<<<<<< HEAD
 // #ifdef  H616
 // #define FAN_PIN 15  // BCM269
 // #endif
-
-=======
->>>>>>> d5c38f04c7ac7b5d743863f53463e52431d0aef3
 #define TEMP_LEFT_LIMIT 60  //C
 #define TEMP_RIGHT_LIMIT 65  //C 
 
@@ -70,7 +53,7 @@ blikvm_int8_t blikvm_fan_init()
     blikvm_int8_t ret = -1;
     do
     {
-          blikvm_board_type_e type = blikvm_get_board_type();
+        blikvm_board_type_e type = blikvm_get_board_type();
         if (type == PI4B_BOARD || type == CM4_BOARD)
         {
             FAN_PIN = 32; //BCM23

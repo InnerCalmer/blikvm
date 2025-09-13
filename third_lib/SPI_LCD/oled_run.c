@@ -40,12 +40,16 @@ blikvm_int32_t oled_240_240_init()
 		//rc = spilcdInit(LCD, 0, 0, 40000000, 11, 12, 22); // LCD type, flip 180, SPI Channel, D/C, RST, LED
 		// Mango Pi Mcore SPI1 channel: LCD, 0, 1, 40000000, 40,22 , 38
 		// v5 22 13 12
-#ifdef RPI
-		rc = spilcdInit(LCD, 0, 0, 40000000, 22, 13 , 18);
-#endif
-#ifdef VER4
-		rc = spilcdInit(LCD, 0, 1, 40000000, 40,22 , 38); // LCD type, flip 180, SPI Channel, D/C 259, RST, LED 260
-#endif
+    	blikvm_board_type_e type = blikvm_get_board_type();
+        if (type == H616_BOARD)
+        {
+            rc = spilcdInit(LCD, 0, 1, 40000000, 40,22 , 38); // LCD type, flip 180, SPI Channel, D/C 259, RST, LED 260
+        }
+        else if(type == CM4_V5_BOARD)
+        {
+			rc = spilcdInit(LCD, 0, 0, 40000000, 22, 13 , 18);
+        }
+
 
 		if(rc != 0)
 		{
@@ -70,12 +74,15 @@ blikvm_int32_t blikvm_backlight_close()
 	blikvm_int32_t ret = -1;
 	do
 	{
-#ifdef VER4
-		myPinWrite(ST7789_V4_BL_PIN, 0);
-#endif
-#ifdef RPI
-		myPinWrite(ST7789_V5_PI_DC_PIN, 0);
-#endif
+    	blikvm_board_type_e type = blikvm_get_board_type();
+        if (type == H616_BOARD)
+        {
+           myPinWrite(ST7789_V4_BL_PIN, 0);
+        }
+        else if(type == CM4_V5_BOARD)
+        {
+			myPinWrite(ST7789_V5_PI_DC_PIN, 0);
+        }
 		ret = 0;
 	}while(0>1);
 	return ret;
@@ -86,12 +93,15 @@ blikvm_int32_t blikvm_backlight_open()
 	blikvm_int32_t ret = -1;
 	do
 	{
-#ifdef VER4
-		myPinWrite(ST7789_V4_BL_PIN, 1);
-#endif
-#ifdef RPI
-		myPinWrite(ST7789_V5_PI_DC_PIN, 1);
-#endif
+    	blikvm_board_type_e type = blikvm_get_board_type();
+        if (type == H616_BOARD)
+        {
+           myPinWrite(ST7789_V4_BL_PIN, 1);
+        }
+        else if(type == CM4_V5_BOARD)
+        {
+			myPinWrite(ST7789_V5_PI_DC_PIN, 1);
+        }
 		ret = 0;
 	}while(0>1);
 	return ret;

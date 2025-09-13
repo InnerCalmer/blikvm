@@ -169,11 +169,11 @@ static int iMangoPiPins[] = {-1, -1, -1, 264, -1, 263, -1, 266, 112, -1,
 static int *iPinLists[] = {ipotatoPins, iBPIZPins, iRPIPins, iOPICM4Pins, iOPIZPPins, iOPIZP2ins, iOPIZPins, iOPI1Pins, iOPI1Pins,
 						   iNPDPins, iNP2Pins, iNPK2Pins, iNPNPins, iNPNPins, iNPNPins, iNPM4Pins, iNPM4Pins,
 						   iTinkerPins, iRadxaZeroPins, iMangoPiPins};
-static const char *szBoardNames[] = {"Le potato\n", "Banana Pi M2 Zero\n", "Raspberry Pi\n", "OPI CM4\n", "Orange Pi Zero Plus\n",
+static const char *szBoardNames[] = {"Le potato\n", "Banana Pi M2 Zero\n", "Raspberry Pi\n", "Rockchip RK3566 Orange Pi CM4 Board\n", "Orange Pi Zero Plus\n",
 									 "Orange Pi Zero Plus 2\n", "Orange Pi Zero\n", "Orange Pi Lite\n", "Orange Pi One\n",
 									 "NanoPi Duo\n", "NanoPi 2\n", "Nanopi K2\n", "NanoPi Neo\n", "NanoPi Air\n",
 									 "NanoPi Neo 2\n", "NanoPi M4\n", "NanoPi M4V2\n", "Tinkerboard\n", "Radxa Zero\n",
-									 "Mango Pi Mcore\n", NULL};
+									 "MangoPi Mcore\n", NULL};
 static int iBoardType;
 static int iPinCount[] = {40, 40, 40, 29, 29, 29, 43, 43, 32, 40, 40, 40, 40, 40, 40, 41, 41, 40, 41}; // number of pins in the header
 // GPIO number of on-board IR receiver
@@ -228,7 +228,7 @@ int AIOInitBoard(const char *pBoardName)
 	}
 	else
 	{
-		ihandle = fopen("/run/machine.id", "rb");
+		ihandle = fopen("/proc/device-tree/model", "rb");
 		if (ihandle != NULL)
 		{
 			i = fread(szTemp, 1, 255, ihandle);
@@ -241,7 +241,7 @@ int AIOInitBoard(const char *pBoardName)
 	iBoardType = -1;
 	while (szBoardNames[i] != NULL)
 	{
-		if (strcmp(szBoardNames[i], szTemp) == 0) // found it!
+		if (strstr(szTemp, szBoardNames[i]) != NULL) // found it!
 		{
 			iBoardType = i;
 			break;
@@ -249,9 +249,10 @@ int AIOInitBoard(const char *pBoardName)
 		i++;
 	}
 // Pi image not have /run/machine.id
-#ifdef RPI
-	iBoardType = 2;
-#endif
+// #ifdef RPI
+// 	iBoardType = 2;
+// #endif
+
 	if (iBoardType == -1) // not found
 	{
 		fprintf(stderr, "Unrecognized board type, aborting...\n");

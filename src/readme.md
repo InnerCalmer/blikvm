@@ -5,7 +5,6 @@
 make RPI=1 SSD1306=1 ST7789=1 
 make RPI=1 ST7789=1 
 ```
-
 ## On Arm board like H616 board use ST7789 Module, for BliKVM V4 hardware.
 ```
 make H616=1 ST7789=1 
