@@ -3,7 +3,7 @@
 set -x
 
 # touch firstboot file
-touch /mnt/tmp/firstboot
+touch /root/firstboot
 
 # clean history command
 history -c && history -w

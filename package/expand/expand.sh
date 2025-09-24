@@ -1,15 +1,15 @@
 #!/bin/bash
 set -x
 
-# 检测是否存在 /mnt/tmp/firstboot 文件
+# 检测是否存在 /root/firstboot 文件
 check_firstboot() {
-  if [ -f "/mnt/tmp/firstboot" ]; then
-    echo "Found /mnt/tmp/firstboot file. Resizing mmcblk0p3 partition..."
+  if [ -f "/root/firstboot" ]; then
+    echo "Found /root/firstboot file. Resizing mmcblk0p3 partition..."
     resize_mmcblk0p3
-    # 删除 /mnt/tmp/firstboot 文件
-    rm -f "/mnt/tmp/firstboot"
+    # 删除 /root/firstboot 文件
+    rm -f "/root/firstboot"
   else
-    echo "No /mnt/tmp/firstboot file found. Skipping partition resizing."
+    echo "No /root/firstboot file found. Skipping partition resizing."
   fi
 }
 

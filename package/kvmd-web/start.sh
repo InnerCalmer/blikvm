@@ -1,10 +1,10 @@
 #!/bin/bash
 set -x
 
-# check /mnt/tmp/firstboot 
+# check /root/firstboot 
 check_firstboot() {
-  if [ -f "/mnt/tmp/firstboot" ]; then
-    echo "Found /mnt/tmp/firstboot file. Resizing mmcblk0p3 partition..."
+  if [ -f "/root/firstboot" ]; then
+    echo "Found /root/firstboot file. Resizing mmcblk0p3 partition..."
     resize_mmcblk0p3
 
     mount -o remount,rw /
@@ -19,10 +19,10 @@ check_firstboot() {
     rm -f /root/.bash_history
 
     mount -o remount,ro /
-    # delete /mnt/tmp/firstboot 
-    rm -f "/mnt/tmp/firstboot"
+    # delete /root/firstboot 
+    rm -f "/root/firstboot"
   else
-    echo "No /mnt/tmp/firstboot file found. Skipping partition resizing."
+    echo "No /root/firstboot file found. Skipping partition resizing."
   fi
 }
 
