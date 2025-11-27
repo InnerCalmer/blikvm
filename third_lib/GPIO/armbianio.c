@@ -215,7 +215,7 @@ int AIOInit(void)
 int AIOInitBoard(const char *pBoardName)
 {
 	FILE *ihandle;
-	char szTemp[256];
+	char szTemp[256]={0};
 	int i;
 
 	// Determine what board we're running on to know which GPIO
@@ -239,15 +239,17 @@ int AIOInitBoard(const char *pBoardName)
 	// see if the board name matches known names
 	i = 0;
 	iBoardType = -1;
+	// printf("board type:%s, compare: %s\n", szTemp, szBoardNames[3]);
 	while (szBoardNames[i] != NULL)
 	{
-		if (strstr(szTemp, szBoardNames[i]) != NULL) // found it!
+		if (strstr( szBoardNames[i],szTemp) != NULL) // found it!
 		{
 			iBoardType = i;
 			break;
 		}
 		i++;
 	}
+		printf("iBoardType:%d\n", iBoardType);
 // Pi image not have /run/machine.id
 // #ifdef RPI
 // 	iBoardType = 2;
